@@ -1,9 +1,9 @@
-import pytz
-import datetime as dt
 import asyncio
+import datetime as dt
 
-from pytz import timezone
+import pytz
 from discord.ext import commands
+from pytz import timezone
 
 cId = 0
 cancelled = 0
@@ -12,10 +12,10 @@ timers = {}
 timers2 = {}
 timers3 = {}
 Tz = {
-    'PST': timezone('America/Los_Angeles'),
-    'CEST': timezone('Europe/Berlin'),
-    'EST': timezone('America/New_York'),
-    'UTC': pytz.utc
+    "PST": timezone("America/Los_Angeles"),
+    "CEST": timezone("Europe/Berlin"),
+    "EST": timezone("America/New_York"),
+    "UTC": pytz.utc,
 }
 
 
@@ -27,32 +27,32 @@ class Countdown(commands.Cog):
     async def countdown(self, ctx, eventname, time1, time2, timespecifier, timezone1):
         serverID = ctx.guild.id
         chanID = ctx.channel.id
-        msgID = ctx.message.id
+        ctx.message.id
 
         print(serverID)
         print(chanID)
 
         if chanID in timers3 and timers3[chanID]:
-            await ctx.send('A timer has already begun.')
+            await ctx.send("A timer has already begun.")
             return
 
         timers3[chanID] = True
 
         # Then you add your timer logic
         while timers3[chanID]:
-            h, m = time2.split(':')
+            h, m = time2.split(":")
             m = int(m)
             h = int(h)
 
-            if timespecifier == 'PM':
+            if timespecifier == "PM":
                 if h == 12:
                     h -= 12
                 h += 12
                 print(h)
-            if timespecifier == 'AM':
+            if timespecifier == "AM":
                 if h == 12:
                     h -= 12
-            month, day, year = time1.split('/')
+            month, day, year = time1.split("/")
             month = int(month)
             day = int(day)
             year = int(year)
@@ -60,7 +60,13 @@ class Countdown(commands.Cog):
             # datetimeFormat = '%Y-%m-%d %H:%M:%S'
             # timezoneend = pytz.timezone(Tz[timezone1])
 
-            date = dt.datetime(year, month, day, h, m, )
+            date = dt.datetime(
+                year,
+                month,
+                day,
+                h,
+                m,
+            )
             cur_date = dt.datetime.now(Tz[timezone1])
             cur_date.replace(microsecond=0)
 
@@ -72,10 +78,16 @@ class Countdown(commands.Cog):
 
             diff = aware_date - cur_date.replace(microsecond=0)
             print(diff)
-            days, hours, minutes, seconds = diff.days, diff.seconds // 3600, diff.seconds % 3600 / 60.0, diff.seconds % 60
+            days, hours, minutes, seconds = (
+                diff.days,
+                diff.seconds // 3600,
+                diff.seconds % 3600 / 60.0,
+                diff.seconds % 60,
+            )
             print(seconds)
             time = await ctx.send(
-                f'{eventname} Countdown \nDays left: {int(days)} \nHours left: {int(hours)} \nMinutes left: {int(minutes)} \n Seconds left: {seconds}')
+                f"{eventname} Countdown \nDays left: {int(days)} \nHours left: {int(hours)} \nMinutes left: {int(minutes)} \n Seconds left: {seconds}"
+            )
             global cancelled
             cancelled = 0
 
@@ -90,7 +102,8 @@ class Countdown(commands.Cog):
                     hours = 0
                     seconds = 0
                     await time.edit(
-                        content=f'{eventname} Countdown \nDays left: {int(days)} \nHours left: {int(hours)} \nMinutes left: {int(minutes)} \n Seconds left: {seconds}')
+                        content=f"{eventname} Countdown \nDays left: {int(days)} \nHours left: {int(hours)} \nMinutes left: {int(minutes)} \n Seconds left: {seconds}"
+                    )
                     print("Stopping")
                     break
 
@@ -101,10 +114,16 @@ class Countdown(commands.Cog):
 
                 diff = aware_date - cur_date.replace(microsecond=0)
 
-                days, hours, minutes, seconds = diff.days, diff.seconds // 3600, diff.seconds % 3600 / 60.0, diff.seconds % 60
+                days, hours, minutes, seconds = (
+                    diff.days,
+                    diff.seconds // 3600,
+                    diff.seconds % 3600 / 60.0,
+                    diff.seconds % 60,
+                )
 
                 await time.edit(
-                    content=f'{eventname} Countdown \nDays left: {int(days)} \nHours left: {int(hours)} \nMinutes left: {int(minutes)} \n Seconds left: {seconds}')
+                    content=f"{eventname} Countdown \nDays left: {int(days)} \nHours left: {int(hours)} \nMinutes left: {int(minutes)} \n Seconds left: {seconds}"
+                )
 
         # After coming out of the loop delete timers from the dictionary
 
@@ -112,12 +131,12 @@ class Countdown(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx):
-        serverID = ctx.guild.id
+        ctx.guild.id
         chanID = ctx.channel.id
-        msgID = ctx.message.id
+        ctx.message.id
 
         if chanID not in timers3:
-            await ctx.send('There is no active countdown in this channel/server.')
+            await ctx.send("There is no active countdown in this channel/server.")
             return
 
         timers3[chanID] = False
